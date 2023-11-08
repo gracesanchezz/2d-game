@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>2D Puzzle Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    #puzzle-board {
+      width: 300px;
+      height: 300px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    }
+    .puzzle-piece {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="puzzle-board"></div>
+
+  <script>
+    // Constants
+    const boardSize = 3;
+    const shuffleMoves = 100;
+
+    // Variables
+    let board = new Array(boardSize);
+    let emptyCell = { x: boardSize - 1, y: boardSize - 1 };
+
+    // Initialize the game board
+    function initializeBoard() {
+      let counter = 1;
+      for (let i = 0; i < boardSize; i++) {
+        board[i] = new Array(boardSize);
+        for (let j = 0; j < boardSize; j++) {
+          board[i][j] = counter++;
+        }
+      }
+      board[boardSize - 1][boardSize - 1] = 0; // Empty cell
+    }
+
+    // Shuffle the board
+    function shuffleBoard() {
+      for (let i = 0; i < shuffleMoves; i++) {
+        const possibleMoves = [];
+        if (emptyCell.x > 0) possibleMoves.push({ x: emptyCell.x - 1, y: emptyCell.y });
+        if (emptyCell.x < boardSize - 1) possibleMoves.push({ x: emptyCell.x + 1, y: emptyCell.y });
+        if (emptyCell.y > 0) possibleMoves.push({ x: emptyCell.x, y: emptyCell.y - 1 });
+        if (emptyCell.y < boardSize - 1) possibleMoves.push({ x: emptyCell.x, y: emptyCell.y + 1 });
+
+        const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+        swapCells(emptyCell, randomMove);
+        emptyCell = randomMove;
+      }
+    }
