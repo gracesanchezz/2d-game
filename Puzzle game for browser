@@ -68,3 +68,23 @@
         emptyCell = randomMove;
       }
     }
+ function swapCells(cell1, cell2) {
+      const temp = board[cell1.x][cell1.y];
+      board[cell1.x][cell1.y] = board[cell2.x][cell2.y];
+      board[cell2.x][cell2.y] = temp;
+    }
+
+    // Create the puzzle pieces on the board
+    function createPuzzlePieces() {
+      const puzzleBoard = document.getElementById("puzzle-board");
+
+      for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+          const piece = document.createElement("div");
+          piece.classList.add("puzzle-piece");
+          piece.textContent = board[i][j];
+          piece.addEventListener("click", () => movePiece(i, j));
+          puzzleBoard.appendChild(piece);
+        }
+      }
+    }
