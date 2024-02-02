@@ -88,3 +88,36 @@
         }
       }
     }
+
+ // Move a puzzle piece if it's adjacent to the empty cell
+    function movePiece(x, y) {
+      if (x === emptyCell.x && Math.abs(y - emptyCell.y) === 1) {
+        swapCells({ x, y }, emptyCell);
+        emptyCell = { x, y };
+        updateBoard();
+      } else if (y === emptyCell.y && Math.abs(x - emptyCell.x) === 1) {
+        swapCells({ x, y }, emptyCell);
+        emptyCell = { x, y };
+        updateBoard();
+      }
+    }
+
+    // Update the puzzle board after a move
+    function updateBoard() {
+      const puzzleBoard = document.getElementById("puzzle-board");
+      const pieces = puzzleBoard.getElementsByClassName("puzzle-piece");
+      for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+          const piece = pieces[i * boardSize + j];
+          piece.textContent = board[i][j];
+        }
+      }
+    }
+
+    // Initialize the game
+    initializeBoard();
+    shuffleBoard();
+    createPuzzlePieces();
+  </script>
+</body>
+</html>
