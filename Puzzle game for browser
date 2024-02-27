@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>2D Puzzle Game</title>
+  <title>2D Puzzle Game with Rewards</title>
   <style>
     body {
       display: flex;
@@ -28,10 +28,16 @@
       font-size: 24px;
       cursor: pointer;
     }
+    #message {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div id="puzzle-board"></div>
+  <div id="message"></div>
 
   <script>
     // Constants
@@ -41,6 +47,8 @@
     // Variables
     let board = new Array(boardSize);
     let emptyCell = { x: boardSize - 1, y: boardSize - 1 };
+    let moves = 0;
+    let score = 0;
 
     // Initialize the game board
     function initializeBoard() {
@@ -68,7 +76,9 @@
         emptyCell = randomMove;
       }
     }
- function swapCells(cell1, cell2) {
+
+    // Swap two cells on the board
+    function swapCells(cell1, cell2) {
       const temp = board[cell1.x][cell1.y];
       board[cell1.x][cell1.y] = board[cell2.x][cell2.y];
       board[cell2.x][cell2.y] = temp;
@@ -89,16 +99,20 @@
       }
     }
 
- // Move a puzzle piece if it's adjacent to the empty cell
+    // Move a puzzle piece if it's adjacent to the empty cell
     function movePiece(x, y) {
       if (x === emptyCell.x && Math.abs(y - emptyCell.y) === 1) {
         swapCells({ x, y }, emptyCell);
         emptyCell = { x, y };
+        moves++;
         updateBoard();
+        checkWin();
       } else if (y === emptyCell.y && Math.abs(x - emptyCell.x) === 1) {
         swapCells({ x, y }, emptyCell);
         emptyCell = { x, y };
+        moves++;
         updateBoard();
+        checkWin();
       }
     }
 
@@ -111,6 +125,20 @@
           const piece = pieces[i * boardSize + j];
           piece.textContent = board[i][j];
         }
+      }
+
+      // Update moves and score
+      document.getElementById("message").textContent = `Moves: ${moves} | Score: ${score}`;
+    }
+
+    // Check if the puzzle is complete
+    function checkWin() {
+      const solution = Array.from({ length: boardSize * boardSize - 1 }, (_, i) => i + 1);
+      const flattenedBoard = board.flat();
+
+      if (JSON.stringify(flattenedBoard) === JSON.stringify(solution)) {
+        score = Math.max(0, 100 - moves * 2); // Adjust the scoring as needed
+        document.getElementById("message").textContent = `Congratulations! Puzzle completed with a score of ${score}.`;
       }
     }
 
